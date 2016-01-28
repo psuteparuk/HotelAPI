@@ -1,7 +1,10 @@
 var fs = require('fs');
 var parse = require('csv-parse');
+var config = require('../config');
 
-exports.get = function(callback) {
+exports.get = function(apiKey, callback) {
+  if (!apiKey || config.apiKey.indexOf(apiKey) < 0) return callback('Invalid API key', []);
+
   fs.readFile(__dirname + '/../hoteldb.csv', 'utf8', function(err, data) {
     if (err) callback(err, []);
     parse(data, { delimiter: ',' }, function(err, hotels) {

@@ -6,8 +6,8 @@ var hotels = require('./models/hotel');
 // GET /hotels?city=:city
 // GET /hotels?order=[asc|desc]
 app.get('/hotels', function(req, res) {
-  hotels.get(function(err, hotelList) {
-    if (err) return res.json(503, err);
+  hotels.get(req.query.api_key, function(err, hotelList) {
+    if (err) return res.status(503).json(err);
 
     var filteredList = hotelList;
 
@@ -30,7 +30,7 @@ app.get('/hotels', function(req, res) {
       }
     }
 
-    res.json(200, filteredList);
+    res.status(200).json(filteredList);
   });
 });
 
@@ -39,12 +39,12 @@ app.get('/hotels/:id', function(req, res) {
   var id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.json(400, 'Invalid Hotel ID.');
 
-  hotels.get(function(err, hotelList) {
-    if (err) return res.json(503, err);
+  hotels.get(req.query.api_key, function(err, hotelList) {
+    if (err) return res.status(503).json(err);
     for (var i = 0; i < hotelList.length; ++i) {
-      if (hotelList[i].id === id) return res.json(200, hotelList[i]);
+      if (hotelList[i].id === id) return res.status(200).json(hotelList[i]);
     }
-    return res.json(200, []); // no such hotel exists
+    return res.status(200).json([]); // no such hotel exists
   });
 });
 
