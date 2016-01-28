@@ -6,7 +6,7 @@ var hotels = require('./models/hotel');
 // GET /hotels?city=:city
 // GET /hotels?order=[asc|desc]
 app.get('/hotels', function(req, res) {
-  hotels.get(req.query.api_key, function(err, hotelList) {
+  hotels.get(req.headers['X-API-Key'] || req.headers['x-api-key'], function(err, hotelList) {
     if (err) return res.status(503).json(err);
 
     var filteredList = hotelList;
